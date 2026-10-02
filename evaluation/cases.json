@@ -1,0 +1,40 @@
+[
+  {
+    "id": "services-threshold",
+    "domain": "services",
+    "represented_party": "consultant",
+    "instructions": "The negotiated bonus applies when annual net sales equal or exceed $100,000. The agreement otherwise keeps the 30-day invoice period.",
+    "contract": "1. Fees\n\nClient shall pay Consultant $2,000 per month within 30 days after receiving an invoice.\n\n2. Bonus\n\nClient shall pay a $500 bonus if annual net sales exceed $100,000.\n\n3. Term\n\nThe agreement ends December 31 unless extended in writing.",
+    "expected_issue": {"evidence": "exceed $100,000", "concept": "strict threshold excludes exactly $100,000", "fix": "equal or exceed"},
+    "preserve": ["within 30 days after receiving an invoice", "December 31"]
+  },
+  {
+    "id": "software-affiliates",
+    "domain": "software license",
+    "represented_party": "customer",
+    "instructions": "The customer negotiated use by its majority-owned affiliates. It did not negotiate sublicensing to unrelated third parties. Keep the confidentiality term unchanged.",
+    "contract": "Article 1 License\n\nProvider grants Customer a nonexclusive license for Customer's internal business operations. No person other than Customer may access the software.\n\nArticle 2 Confidentiality\n\nEach party shall keep the other's nonpublic information confidential for three years after termination.",
+    "expected_issue": {"evidence": "No person other than Customer may access the software", "concept": "affiliate use excluded", "fix": "permit negotiated majority-owned affiliate access without general third-party sublicensing"},
+    "preserve": ["three years after termination", "nonexclusive license"]
+  },
+  {
+    "id": "dpa-subprocessor-notice",
+    "domain": "data processing agreement",
+    "represented_party": "customer/controller",
+    "instructions": "Processor agreed to notify Customer at least 15 days before adding a subprocessor and give Customer a chance to object. No absolute veto was negotiated. Do not assume a jurisdiction-specific statutory rule.",
+    "contract": "1. Subprocessors\n\nProcessor may appoint additional subprocessors. Processor will notify Customer within 15 days after appointment. Customer may send questions to Processor.\n\n2. Security\n\nProcessor will maintain the security measures in Schedule A.",
+    "expected_issue": {"evidence": "within 15 days after appointment", "concept": "post-appointment notice contradicts advance notice and omits objection opportunity", "fix": "notice at least 15 days before appointment and a defined objection process"},
+    "preserve": ["security measures in Schedule A"],
+    "trap": "Do not invent an absolute veto or claim a particular statute applies."
+  },
+  {
+    "id": "property-option-clock",
+    "domain": "property option",
+    "represented_party": "option holder",
+    "instructions": "The option may be exercised through the fifth business day after receipt of the appraisal. Receipt, not dispatch, starts the clock. No assumption about local holidays is supplied.",
+    "contract": "Section 1 Option\n\nHolder may exercise the option within five calendar days after Seller sends the appraisal. Notice must be delivered to Seller in writing.\n\nSection 2 Price\n\nThe exercise price equals the appraised value.",
+    "expected_issue": {"evidence": "five calendar days after Seller sends the appraisal", "concept": "wrong day type and wrong triggering event", "fix": "fifth business day after Holder receives appraisal"},
+    "preserve": ["exercise price equals the appraised value"],
+    "trap": "Flag the missing holiday definition as a question, not a conclusion about controlling law."
+  }
+]

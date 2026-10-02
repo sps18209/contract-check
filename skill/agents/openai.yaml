@@ -1,0 +1,4 @@
+interface:
+  display_name: Contract Check
+  short_description: Review and revise contracts with documented choices
+  default_prompt: Use $contract-check to review this agreement, show structural choices, and propose evidence-linked revisions.

@@ -1,0 +1,25 @@
+{
+  "source_sha256": "4b4b5a3a77ab7b99ec5aa407ae275f04cb7ab7c5ca4d712ccece33be156c1eee",
+  "project_version": 0,
+  "context": {
+    "contract_type": "software license excerpt",
+    "represented_party": "Customer",
+    "objective": "Permit use by Customer's majority-owned affiliates without unrelated third-party sublicensing; preserve confidentiality term",
+    "jurisdiction": "unknown"
+  },
+  "findings": [
+    {
+      "id": "F-1", "lens": "deal", "status": "proposed",
+      "evidence": [
+        {"block_id": "b00002", "quote": "Provider grants Customer a nonexclusive license for Customer's internal business operations."},
+        {"block_id": "b00002", "quote": "No person other than Customer may access the software."}
+      ],
+      "affected_blocks": ["b00002"],
+      "issue": "The negotiated instruction permits use by Customer's majority-owned affiliates, but the grant names only Customer and the next sentence expressly bars access by anyone else. A possible reading of 'Customer's internal business operations' could encompass group work, but the express access restriction defeats or at least materially clouds affiliate use.",
+      "consequence": "Provider could treat an affiliate's access or use as outside the license, despite the negotiated affiliate permission.",
+      "proposal": "Expressly permit Customer and its majority-owned affiliates to access and use the software for their internal business operations, and conform the access restriction to that limited group. Do not add a right to sublicense to unrelated third parties.",
+      "uncertainty": "The instruction does not say whether majority ownership is direct or indirect, when status is tested, whether affiliate contractors or personnel may access, or whether Customer must remain responsible for affiliate conduct.",
+      "decision_needed": "Confirm the affiliate boundary and access mechanics, including direct or indirect majority ownership and responsibility for affiliate use."
+    }
+  ]
+}

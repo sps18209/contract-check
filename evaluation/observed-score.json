@@ -1,0 +1,33 @@
+{
+  "scope": "provenance, expected passage citation and unchanged phrases only; human rubric required",
+  "cases": [
+    {
+      "case_id": "services-threshold",
+      "status": "machine checks completed",
+      "human_assessment": "pending",
+      "expected_passage_cited": true,
+      "preservation": "not tested"
+    },
+    {
+      "case_id": "software-affiliates",
+      "status": "machine checks completed",
+      "human_assessment": "pending",
+      "expected_passage_cited": true,
+      "preservation": "not tested"
+    },
+    {
+      "case_id": "dpa-subprocessor-notice",
+      "status": "machine checks completed",
+      "human_assessment": "pending",
+      "expected_passage_cited": true,
+      "preservation": "not tested"
+    },
+    {
+      "case_id": "property-option-clock",
+      "status": "machine checks completed",
+      "human_assessment": "pending",
+      "expected_passage_cited": true,
+      "preservation": "not tested"
+    }
+  ]
+}
