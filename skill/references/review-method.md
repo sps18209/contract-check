@@ -23,6 +23,8 @@ The installed Contract Navigator bundle was inventoried on 2026-10-01. Inspected
 
 The Carrie exercise juxtaposes a client narrative and contract; one instructional mismatch is an inclusive bonus threshold versus a strict greater-than threshold. Use that principle with original test fixtures, not copied source passages. The class notes flag obligations in definitions and inconsistent list/sentence presentation. The termination exercise supports explicit notice/cure/plan sequencing. These sources inform this original workflow; no source documents are bundled for resale.
 
+The user-supplied `CONTRACTS.zip` was reviewed on 2026-10-02. It contains Tina L. Stark's *Drafting Contracts* (2d ed.), the Georgetown Writing Center clarity handout, course notes and exercises, a sample internship agreement, and unrelated finance and constitutional materials. `transaction-review.md` synthesizes original prompts from the contract-related portions. The textbook, handout, notes, exercises, and sample agreement are not bundled. Several notes are compressed or potentially inaccurate statements of doctrine; verify relevant law and facts independently. Do not describe the skill as a licensed adaptation of the textbook.
+
 ## Cross-domain interpretive review
 
 Before proposing substantive changes, construct a compact relationship model: stated purpose; actors and roles; promised performances; resources and information each controls; timing; uncertainty allocation; decision rights; evidence of performance; and exit consequences. Separate express text, supplied context, inference, and unknowns. Validate every proposed correction against the actual transaction rather than transferring a familiar clause by superficial analogy.
