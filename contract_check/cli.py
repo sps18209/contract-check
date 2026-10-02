@@ -5,6 +5,9 @@ from pathlib import Path
 from .core import ingest, apply, render, check, compare
 from .review import validate_review
 from .audit import audit
+from .docx import extract_docx
+from .presentation import decision_cards, revision_report
+from .inventory import inventory
 
 
 def load(path):
@@ -21,11 +24,15 @@ def main(argv=None):
     for name, args in [('ingest', ['input', 'output']), ('apply', ['project', 'plan', 'output']),
                        ('render', ['project', 'output']), ('check', ['project', 'input']),
                        ('compare', ['original', 'revised', 'output']), ('audit', ['original', 'revised', 'output']),
-                       ('validate-review', ['project', 'review'])]:
+                       ('validate-review', ['project', 'review']),
+                       ('extract-docx', ['input', 'output', 'manifest']),
+                       ('cards', ['project', 'review', 'output']),
+                       ('report', ['original', 'revised', 'output']),
+                       ('inventory', ['project', 'output'])]:
         cmd = sub.add_parser(name)
         for arg in args:
             cmd.add_argument(arg)
-        if name in ('render', 'compare'):
+        if name in ('render', 'compare', 'report'):
             cmd.add_argument('--style', choices=['preserve', 'decimal', 'articles'], default='preserve')
         if name == 'render':
             cmd.add_argument('--update-refs', action='store_true')
@@ -44,13 +51,23 @@ def main(argv=None):
         elif a.command == 'check':
             report = check(load(a.project), Path(a.input).read_text(encoding='utf-8'))
             print(json.dumps(report, indent=2))
-            return 2 if any(report[k] for k in ('duplicate_labels', 'unresolved_references', 'duplicate_definitions')) else 0
+            return 2 if any(report[k] for k in ('duplicate_labels', 'unresolved_references', 'unsupported_references', 'duplicate_definitions')) else 0
         elif a.command == 'compare':
             save(a.output, compare(load(a.original), load(a.revised), a.style))
         elif a.command == 'audit':
             save(a.output, audit(load(a.original), load(a.revised)))
         elif a.command == 'validate-review':
             print(json.dumps(validate_review(load(a.project), load(a.review)), indent=2))
+        elif a.command == 'extract-docx':
+            extracted = extract_docx(a.input)
+            Path(a.output).write_text(extracted['text'], encoding='utf-8')
+            save(a.manifest, extracted['manifest'])
+        elif a.command == 'cards':
+            Path(a.output).write_text(decision_cards(load(a.project), load(a.review)), encoding='utf-8')
+        elif a.command == 'report':
+            Path(a.output).write_text(revision_report(load(a.original), load(a.revised), a.style), encoding='utf-8')
+        elif a.command == 'inventory':
+            save(a.output, inventory(load(a.project)))
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
         p.exit(1, f'contract-check: {error}\n')
     return 0

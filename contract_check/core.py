@@ -12,6 +12,7 @@ SCHEMA = 1
 STYLES = ('preserve', 'decimal', 'articles')
 HEADING = re.compile(r'^(?:(Article|Section)\s+)?(\d+(?:\.\d+)*)(?:\.)?\s+(.+)$', re.I)
 REF = re.compile(r'\b(Article|Section)\s+(\d+(?:\.\d+)*)\b', re.I)
+UNSUPPORTED_REF = re.compile(r'\bSections\s+\d|\b(?:Section|Article)\s+\d+(?:\.\d+)*(?:\([a-z0-9]+\)|\s*(?:-|–|through|to)\s*\d)', re.I)
 DEFINED = re.compile(r'[“"]([^“”"]+)[”"]\s+(?:means|shall mean)\b', re.I)
 
 
@@ -168,6 +169,8 @@ def render(project: dict[str, Any], style: str = 'preserve', update_refs: bool =
         for i, b in enumerate(project['blocks']):
             if b['kind'] == 'heading':
                 continue
+            if UNSUPPORTED_REF.search(output[i]):
+                raise ValueError('unsupported compound or subclause reference; review manually')
             def sub(match: re.Match[str]) -> str:
                 key = (match.group(1).lower(), match.group(2))
                 if key in ambiguous:
@@ -183,14 +186,17 @@ def check(project: dict[str, Any], text: str) -> dict[str, Any]:
     validate(project)
     headings = [b for b in project['blocks'] if b['kind'] == 'heading']
     declared = {}
-    for b in headings:
-        if b['text'] not in text and b['title'] not in text:
-            continue
-        match = HEADING.match(next((line for line in text.splitlines() if b['title'] in line), ''))
+    candidates = {}
+    for line in text.splitlines():
+        match = HEADING.fullmatch(line.strip())
         if match:
+            candidates.setdefault(match.group(3), []).append(match)
+    for b in headings:
+        for match in candidates.get(b['title'], []):
             key = ((match.group(1) or 'Section').lower(), match.group(2))
             declared[key] = declared.get(key, 0) + 1
     refs = {(m.group(1).lower(), m.group(2)) for m in REF.finditer(text)}
+    unsupported = sorted(set(m.group(0) for m in UNSUPPORTED_REF.finditer(text)))
     definitions: dict[str, int] = {}
     for term in DEFINED.findall(text):
         definitions[term] = definitions.get(term, 0) + 1
@@ -198,6 +204,7 @@ def check(project: dict[str, Any], text: str) -> dict[str, Any]:
             'heading_count': len(headings),
             'duplicate_labels': [f'{k[0]} {k[1]}' for k,v in declared.items() if v > 1],
             'unresolved_references': [f'{k[0]} {k[1]}' for k in sorted(refs - declared.keys())],
+            'unsupported_references': unsupported,
             'duplicate_definitions': sorted(k for k,v in definitions.items() if v > 1)}
 
 

@@ -51,6 +51,13 @@ class ContractWorkflow(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unmapped reference'):
             render(p, 'decimal', update_refs=True)
 
+    def test_compound_reference_requires_manual_review(self):
+        p = labeled()
+        p['blocks'][1]['text'] = 'See Section 1(a) and Sections 1 and 2.'
+        with self.assertRaisesRegex(ValueError, 'unsupported'):
+            render(p, 'decimal', update_refs=True)
+        self.assertIn('Section 1(a)', check(p, p['blocks'][1]['text'])['unsupported_references'])
+
     def test_deleted_block_visible_in_comparison(self):
         p = labeled()
         revised = apply(p, {'base_version': p['version'], 'source_sha256': p['source_sha256'],

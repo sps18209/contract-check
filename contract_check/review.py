@@ -25,8 +25,8 @@ def validate_review(project, review):
         if f.get('lens') not in LENSES or f.get('status') not in STATUSES:
             raise ValueError('invalid lens or status')
         evidence = f.get('evidence', [])
-        if not isinstance(evidence, list) or not evidence:
-            raise ValueError('finding needs source evidence')
+        if not isinstance(evidence, list) or (not evidence and not f.get('absence_basis')):
+            raise ValueError('finding needs source evidence or an absence basis')
         for row in evidence:
             if row.get('block_id') not in blocks or not isinstance(row.get('quote'), str) or not row['quote'] or row['quote'] not in blocks[row['block_id']]:
                 raise ValueError('quote does not occur in cited block')
