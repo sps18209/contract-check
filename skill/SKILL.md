@@ -1,6 +1,6 @@
 ---
 name: contract-check
-description: Review, organize, and revise contracts with user-selected structure, evidence-linked findings, controlled edits, numbering and reference checks, and a transparent comparison. Use for contract analysis, missing-section review, deal-to-draft comparison, contract rewriting, and definition or termination review.
+description: Review and revise contracts with structural choices, evidence-linked findings, guarded edits, and comparisons. Use for deal-to-draft, missing-section, definition, and termination review.
 ---
 
 # Contract Check
