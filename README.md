@@ -17,6 +17,7 @@ python -m contract_check cards revised.json review.json choices.md
 python -m contract_check choice-template revised.json review.json choices.json
 python -m contract_check validate-choices revised.json review.json choices.json
 python -m contract_check inventory project.json inventory.json
+python -m contract_check preview revised.json structure.md
 python -m contract_check report project.json revised.json report.md
 python -m unittest discover -s tests -v
 ```

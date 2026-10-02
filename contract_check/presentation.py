@@ -2,6 +2,8 @@
 from .review import validate_review
 from .core import compare
 from .audit import audit
+from .inventory import inventory
+from .core import render
 
 
 def _safe(value):
@@ -45,4 +47,32 @@ def revision_report(original, revised, style='preserve'):
     if not flags:
         rows.append('No lexical flags; review all edits for meaning regardless.')
     rows += ['', '## Text comparison', '', '```diff', changes['unified_diff'].rstrip(), '```', '']
+    return '\n'.join(rows)
+
+
+def structure_preview(project):
+    """Show layout choices without treating a menu as required legal content."""
+    candidates = inventory(project)['heading_candidates']
+    confirmed = [b for b in project['blocks'] if b['kind'] == 'heading']
+    rows = ['# Structure choices', '',
+            'Existing confirmed headings: ' + (', '.join(_safe(b['title']) for b in confirmed) or 'none'),
+            'Unconfirmed heading candidates: ' + (', '.join(_safe(c['title']) for c in candidates) or 'none'), '',
+            '| Choice | Effect | Preview |', '| --- | --- | --- |']
+    for style, effect in [('preserve', 'Keep source sequence and headings'),
+                          ('decimal', 'Number confirmed headings by level'),
+                          ('articles', 'Use Article at level 1 and Section below')]:
+        try:
+            text, _ = render(project, style)
+            sample = ' / '.join(t.strip() for t in text.splitlines() if t.strip())[:180]
+        except ValueError as exc:
+            sample = 'Needs heading correction: ' + str(exc)
+        rows.append(f'| {style} | {_safe(effect)} | {_safe(sample)} |')
+    rows += ['', '## Candidate section decisions', '',
+             'For each candidate, choose include, omit, or defer after considering the transaction. These are prompts, not required clauses.', '',
+             '| Candidate | Choice | Reason or condition |', '| --- | --- | --- |']
+    for name in ('Background', 'Definitions', 'Performance and deliverables', 'Payment',
+                 'Term and termination', 'Notices', 'Risk allocation', 'General provisions',
+                 'Signatures and attachments'):
+        rows.append(f'| {name} | include / omit / defer |  |')
+    rows += ['', 'Definition placement: inline / consolidated before operative terms / consolidated after operative terms / retain current placement.', '']
     return '\n'.join(rows)

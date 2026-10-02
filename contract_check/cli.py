@@ -6,7 +6,7 @@ from .core import ingest, apply, render, check, compare
 from .review import validate_review, validate_choices, choice_template
 from .audit import audit
 from .docx import extract_docx
-from .presentation import decision_cards, revision_report
+from .presentation import decision_cards, revision_report, structure_preview
 from .inventory import inventory
 
 
@@ -28,7 +28,7 @@ def main(argv=None):
                        ('extract-docx', ['input', 'output', 'manifest']),
                        ('cards', ['project', 'review', 'output']),
                        ('report', ['original', 'revised', 'output']),
-                       ('inventory', ['project', 'output']),
+                       ('inventory', ['project', 'output']), ('preview', ['project', 'output']),
                        ('choice-template', ['project', 'review', 'output']),
                        ('validate-choices', ['project', 'review', 'choices'])]:
         cmd = sub.add_parser(name)
@@ -75,6 +75,8 @@ def main(argv=None):
             Path(a.output).write_text(revision_report(load(a.original), load(a.revised), a.style), encoding='utf-8')
         elif a.command == 'inventory':
             save(a.output, inventory(load(a.project)))
+        elif a.command == 'preview':
+            Path(a.output).write_text(structure_preview(load(a.project)), encoding='utf-8')
         elif a.command == 'choice-template':
             save(a.output, choice_template(load(a.project), load(a.review)))
         elif a.command == 'validate-choices':

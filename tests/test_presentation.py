@@ -1,9 +1,15 @@
 import unittest
 from contract_check import ingest, apply
-from contract_check.presentation import decision_cards, revision_report
+from contract_check.presentation import decision_cards, revision_report, structure_preview
 
 
 class PresentationTest(unittest.TestCase):
+    def test_structure_choices_do_not_force_sections(self):
+        preview = structure_preview(ingest('1. Fees\n\nPay on receipt.'))
+        self.assertIn('Unconfirmed heading candidates: Fees', preview)
+        self.assertIn('include / omit / defer', preview)
+        self.assertIn('Definitions', preview)
+
     def test_missing_clause_choice_and_revision_report(self):
         project = ingest('Services end on December 31.')
         finding = {'id': 'F-1', 'lens': 'structural', 'status': 'proposed',
