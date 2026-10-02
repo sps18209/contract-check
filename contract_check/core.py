@@ -78,28 +78,44 @@ def apply(project: dict[str, Any], plan: dict[str, Any], review=None, choices=No
         from .review import validate_choices
         validate_choices(project, review, choices)
         selected = {s['finding_id']: s['choice'] for s in choices['selections']}
+    decisions = plan.get('decisions', {})
+    if not isinstance(decisions, dict):
+        raise ValueError('decisions must be an object')
+    for key, value in decisions.items():
+        if not isinstance(key, str) or not isinstance(value, dict) or value.get('status') not in ('include', 'omit', 'defer') or not value.get('reason'):
+            raise ValueError('invalid decision')
+
+    def authorized(op, before=''):
+        action = op['action']
+        if action == 'label':
+            return
+        if action == 'replace' and op.get('classification') == 'formatting' and re.sub(r'\s+', '', before) == re.sub(r'\s+', '', op.get('after', '')):
+            return
+        section = decisions.get(op.get('section_decision_id'), {})
+        if action in ('insert', 'delete') and op.get('kind') == 'heading' and section.get('status') == ('include' if action == 'insert' else 'omit'):
+            return
+        if not op.get('finding_id') or selected.get(op['finding_id']) not in ('adopt', 'custom'):
+            raise ValueError('content edit needs an adopted finding or matching section decision')
+
     result = copy.deepcopy(project)
     blocks = {b['id']: b for b in result['blocks']}
     seen = set()
     for op in plan.get('operations', []):
         _approval(op)
         action, bid = op.get('action'), op.get('id')
-        if op.get('finding_id'):
-            if selected.get(op['finding_id']) not in ('adopt', 'custom'):
-                raise ValueError('edit is not linked to an adopted finding')
-        elif op.get('classification') == 'substantive':
-            raise ValueError('substantive edit needs an adopted finding')
         if action not in ('replace', 'delete', 'insert', 'label') or not isinstance(bid, str) or bid in seen:
             raise ValueError('invalid or repeated operation')
         seen.add(bid)
         if action == 'insert':
             if bid in blocks or not bid.startswith('n') or not isinstance(op.get('text'), str) or not op['text'].strip():
                 raise ValueError('insert needs a new n-prefixed ID and text')
+            authorized(op)
             block = {'id': bid, 'text': op['text'], 'kind': 'body', 'origin': []}
             blocks[bid] = block
         else:
             if bid not in blocks or blocks[bid]['text'] != op.get('before'):
                 raise ValueError('unknown target or source mismatch')
+            authorized(op, blocks[bid]['text'])
             block = blocks[bid]
             if action == 'replace':
                 if not isinstance(op.get('after'), str):
@@ -130,12 +146,6 @@ def apply(project: dict[str, Any], plan: dict[str, Any], review=None, choices=No
         if plan.get('order_approved') is not True or not plan.get('order_reason'):
             raise ValueError('reordering requires approval and reason')
     result['blocks'] = [blocks[bid] for bid in order]
-    decisions = plan.get('decisions', {})
-    if not isinstance(decisions, dict):
-        raise ValueError('decisions must be an object')
-    for key, value in decisions.items():
-        if not isinstance(key, str) or not isinstance(value, dict) or value.get('status') not in ('include', 'omit', 'defer') or not value.get('reason'):
-            raise ValueError('invalid decision')
     result['decisions'].update(copy.deepcopy(decisions))
     result['version'] += 1
     validate(result)

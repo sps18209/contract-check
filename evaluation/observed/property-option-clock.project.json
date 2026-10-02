@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "source": "Section 1 Option\n\nHolder may exercise the option within five calendar days after Seller sends the appraisal. Notice must be delivered to Seller in writing.\n\nSection 2 Price\n\nThe exercise price equals the appraised value.\n",
+  "source_sha256": "7ea63ab068495fba5f3087ddef2d682738b1b0134d86327706ca68c81b2354e9",
+  "version": 0,
+  "blocks": [
+    {
+      "id": "b00001",
+      "text": "Section 1 Option\n",
+      "kind": "body",
+      "origin": [
+        "b00001"
+      ]
+    },
+    {
+      "id": "b00002",
+      "text": "Holder may exercise the option within five calendar days after Seller sends the appraisal. Notice must be delivered to Seller in writing.\n",
+      "kind": "body",
+      "origin": [
+        "b00002"
+      ]
+    },
+    {
+      "id": "b00003",
+      "text": "Section 2 Price\n",
+      "kind": "body",
+      "origin": [
+        "b00003"
+      ]
+    },
+    {
+      "id": "b00004",
+      "text": "The exercise price equals the appraised value.\n",
+      "kind": "body",
+      "origin": [
+        "b00004"
+      ]
+    }
+  ],
+  "decisions": {},
+  "ledger": []
+}

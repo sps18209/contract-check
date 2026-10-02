@@ -1,6 +1,7 @@
 import unittest
 from contract_check import ingest, apply
 from contract_check.presentation import decision_cards, revision_report, structure_preview
+from contract_check.review import choice_template
 
 
 class PresentationTest(unittest.TestCase):
@@ -21,11 +22,15 @@ class PresentationTest(unittest.TestCase):
                   'context': {x: 'unknown' for x in ('contract_type', 'represented_party', 'objective', 'jurisdiction')},
                   'findings': [finding]}
         self.assertIn('Reviewed all provisions', decision_cards(project, review))
+        review['findings'][0]['evidence'] = [{'block_id': 'b00001', 'quote': 'December 31'}]
+        choices = choice_template(project, review)
+        choices['selections'][0].update(choice='adopt', reason='Client approved extension')
         revised = apply(project, {'source_sha256': project['source_sha256'], 'base_version': 0,
                                   'operations': [{'action': 'replace', 'id': 'b00001',
                                                   'before': project['blocks'][0]['text'],
                                                   'after': 'Services end on January 31.',
-                                                  'reason': 'Approved extension', 'approved': True}]})
+                                                  'reason': 'Approved extension', 'approved': True,
+                                                  'finding_id': 'F-1'}]}, review, choices)
         report = revision_report(project, revised)
         self.assertIn('December 31', report)
         self.assertIn('January 31', report)

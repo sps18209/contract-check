@@ -1,0 +1,42 @@
+{
+  "source_sha256": "7ea63ab068495fba5f3087ddef2d682738b1b0134d86327706ca68c81b2354e9",
+  "project_version": 0,
+  "context": {
+    "contract_type": "option agreement (subject asset unknown)",
+    "represented_party": "option holder",
+    "objective": "exercise through the fifth business day after receipt of appraisal",
+    "jurisdiction": "unknown"
+  },
+  "findings": [
+    {
+      "id": "F-1", "lens": "deal", "status": "proposed",
+      "evidence": [{"block_id": "b00002", "quote": "within five calendar days"}],
+      "affected_blocks": ["b00002"],
+      "issue": "The draft uses calendar days; the supplied instruction allows exercise through the fifth business day after receipt.",
+      "consequence": "The draft can end Holder's exercise opportunity earlier, especially across weekends or holidays.",
+      "proposal": "State that Holder may exercise through the fifth business day after receipt of the appraisal; define business day and the applicable holiday calendar after that choice is supplied.",
+      "uncertainty": "No jurisdiction or local holiday convention was supplied; the exact fifth business day cannot yet be calculated.",
+      "decision_needed": "Confirm the applicable business-day and holiday convention."
+    },
+    {
+      "id": "F-2", "lens": "deal", "status": "proposed",
+      "evidence": [{"block_id": "b00002", "quote": "after Seller sends the appraisal"}],
+      "affected_blocks": ["b00002"],
+      "issue": "Seller's dispatch starts the draft clock, whereas the supplied instruction starts it on Holder's receipt. Sending and receipt can occur on different dates.",
+      "consequence": "Transit or failed delivery can consume or eliminate Holder's exercise period before Holder receives the appraisal.",
+      "proposal": "Replace the trigger with Holder's receipt of the appraisal, and specify a way to establish its receipt date if the parties need operational certainty.",
+      "uncertainty": "The agreement does not state how Seller transmits the appraisal or how receipt is proved.",
+      "decision_needed": "Choose any delivery and receipt evidence procedure, while preserving receipt as the trigger."
+    },
+    {
+      "id": "F-3", "lens": "linguistic", "status": "proposed",
+      "evidence": [{"block_id": "b00002", "quote": "Holder may exercise the option within five calendar days after Seller sends the appraisal. Notice must be delivered to Seller in writing."}],
+      "affected_blocks": ["b00002"],
+      "issue": "It is unclear whether a written notice must reach Seller by the deadline or whether Holder's timely sending completes exercise. The separate delivery sentence suggests receipt by Seller, but it supplies no effective-time rule.",
+      "consequence": "A notice sent near the deadline may prompt a dispute over timely exercise.",
+      "proposal": "Specify the event that completes exercise and its deadline, including permitted delivery method and any time-of-day rule if material.",
+      "uncertainty": "The supplied instruction fixes the appraisal-receipt trigger but does not state whether notice dispatch or delivery completes exercise.",
+      "decision_needed": "Choose whether Seller must receive the written exercise notice by the fifth business day or timely dispatch suffices."
+    }
+  ]
+}

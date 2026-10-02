@@ -21,6 +21,7 @@ class ContractWorkflow(unittest.TestCase):
         revised = apply(p, {'base_version': p['version'], 'source_sha256': p['source_sha256'],
                             'operations': [{'action': 'insert', 'id': 'n00001', 'text': '3. Notices',
                                             'kind': 'heading', 'title': 'Notices', 'level': 1,
+                                            'section_decision_id': 'notices',
                                             'reason': 'Add agreed notice heading', 'approved': True}],
                             'order': ['b00003', 'b00004', 'b00001', 'b00002', 'n00001'],
                             'order_reason': 'Put termination before fees', 'order_approved': True,
@@ -68,9 +69,19 @@ class ContractWorkflow(unittest.TestCase):
 
     def test_deleted_block_visible_in_comparison(self):
         p = labeled()
+        from contract_check.review import choice_template
+        review = {'source_sha256': p['source_sha256'], 'project_version': p['version'],
+                  'context': {k: 'unknown' for k in ('contract_type', 'represented_party', 'objective', 'jurisdiction')},
+                  'findings': [{'id': 'F-delete', 'lens': 'deal', 'status': 'proposed',
+                                'evidence': [{'block_id': 'b00002', 'quote': 'Pay $100'}],
+                                'affected_blocks': ['b00002'],
+                                **{k: 'Client decision' for k in ('issue', 'consequence', 'proposal', 'uncertainty', 'decision_needed')}}]}
+        choices = choice_template(p, review)
+        choices['selections'][0].update(choice='adopt', reason='Client removed fee')
         revised = apply(p, {'base_version': p['version'], 'source_sha256': p['source_sha256'],
                             'operations': [{'action': 'delete', 'id': 'b00002', 'before': p['blocks'][1]['text'],
-                                            'reason': 'Client removed fee', 'approved': True}]})
+                                            'reason': 'Client removed fee', 'approved': True,
+                                            'finding_id': 'F-delete'}]}, review, choices)
         self.assertTrue(any(c['change'] == 'delete' for c in compare(p, revised)['changes']))
 
     def test_article_source_reference_kind(self):

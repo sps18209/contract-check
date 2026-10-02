@@ -1,0 +1,42 @@
+{
+  "source_sha256": "72a65b0f21f45b69bc491402508c8e56fa950d2d440882e9aae18cafd8c6c2cd",
+  "project_version": 0,
+  "context": {
+    "contract_type": "services agreement",
+    "represented_party": "consultant",
+    "objective": "bonus at annual net sales equal to or above $100,000; retain 30-day invoice period",
+    "jurisdiction": "unknown"
+  },
+  "findings": [
+    {
+      "id": "F-1", "lens": "deal", "status": "proposed",
+      "evidence": [{"block_id": "b00004", "quote": "annual net sales exceed $100,000"}],
+      "affected_blocks": ["b00004"],
+      "issue": "The draft's strict exceed threshold excludes exactly $100,000, whereas the supplied instruction includes equality.",
+      "consequence": "Consultant would receive no $500 bonus at exactly $100,000 under the draft's ordinary reading.",
+      "proposal": "Change the condition to annual net sales equal or exceed $100,000 (or are at least $100,000). Keep the $500 bonus amount.",
+      "uncertainty": "The measurement period and net-sales calculation are not supplied.",
+      "decision_needed": "Confirm the inclusive threshold; decide separately whether calculation details are needed."
+    },
+    {
+      "id": "F-2", "lens": "operational", "status": "proposed",
+      "evidence": [{"block_id": "b00004", "quote": "Client shall pay a $500 bonus if annual net sales exceed $100,000."}],
+      "affected_blocks": ["b00004", "b00006"],
+      "issue": "The agreement does not identify which annual period determines sales, how net sales are calculated or documented, or when the bonus is due. The December 31 end date might imply a calendar year, but it does not expressly say so.",
+      "consequence": "The parties may disagree whether the condition occurred or when Client must pay after the annual result is known.",
+      "proposal": "If the commercial terms call for it, identify the measurement year, net-sales method and records, and bonus payment due date without changing the inclusive trigger or the monthly invoice rule.",
+      "uncertainty": "No measurement convention, reporting process, or bonus payment timetable was supplied.",
+      "decision_needed": "Decide whether and how to specify sales measurement, verification, and bonus payment timing."
+    },
+    {
+      "id": "F-3", "lens": "linguistic", "status": "proposed",
+      "evidence": [{"block_id": "b00006", "quote": "The agreement ends December 31 unless extended in writing."}],
+      "affected_blocks": ["b00006"],
+      "issue": "The termination date omits a year; the intended December 31 cannot be determined from this standalone draft.",
+      "consequence": "The parties may dispute the initial term and which annual sales period relates to the bonus.",
+      "proposal": "Specify the intended year once confirmed, and align the bonus measurement period if relevant.",
+      "uncertainty": "The intended year and any effective date were not supplied.",
+      "decision_needed": "Supply the intended end-date year; clarify the initial term if needed."
+    }
+  ]
+}

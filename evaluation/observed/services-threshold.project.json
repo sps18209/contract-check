@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "source": "1. Fees\n\nClient shall pay Consultant $2,000 per month within 30 days after receiving an invoice.\n\n2. Bonus\n\nClient shall pay a $500 bonus if annual net sales exceed $100,000.\n\n3. Term\n\nThe agreement ends December 31 unless extended in writing.\n",
+  "source_sha256": "72a65b0f21f45b69bc491402508c8e56fa950d2d440882e9aae18cafd8c6c2cd",
+  "version": 0,
+  "blocks": [
+    {
+      "id": "b00001",
+      "text": "1. Fees\n",
+      "kind": "body",
+      "origin": [
+        "b00001"
+      ]
+    },
+    {
+      "id": "b00002",
+      "text": "Client shall pay Consultant $2,000 per month within 30 days after receiving an invoice.\n",
+      "kind": "body",
+      "origin": [
+        "b00002"
+      ]
+    },
+    {
+      "id": "b00003",
+      "text": "2. Bonus\n",
+      "kind": "body",
+      "origin": [
+        "b00003"
+      ]
+    },
+    {
+      "id": "b00004",
+      "text": "Client shall pay a $500 bonus if annual net sales exceed $100,000.\n",
+      "kind": "body",
+      "origin": [
+        "b00004"
+      ]
+    },
+    {
+      "id": "b00005",
+      "text": "3. Term\n",
+      "kind": "body",
+      "origin": [
+        "b00005"
+      ]
+    },
+    {
+      "id": "b00006",
+      "text": "The agreement ends December 31 unless extended in writing.\n",
+      "kind": "body",
+      "origin": [
+        "b00006"
+      ]
+    }
+  ],
+  "decisions": {},
+  "ledger": []
+}

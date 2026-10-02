@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "source": "1. Subprocessors\n\nProcessor may appoint additional subprocessors. Processor will notify Customer within 15 days after appointment. Customer may send questions to Processor.\n\n2. Security\n\nProcessor will maintain the security measures in Schedule A.\n",
+  "source_sha256": "c846bb06a23ee6e081a61313eb7479e3796ab550592f85a53962e97059415395",
+  "version": 0,
+  "blocks": [
+    {
+      "id": "b00001",
+      "text": "1. Subprocessors\n",
+      "kind": "body",
+      "origin": [
+        "b00001"
+      ]
+    },
+    {
+      "id": "b00002",
+      "text": "Processor may appoint additional subprocessors. Processor will notify Customer within 15 days after appointment. Customer may send questions to Processor.\n",
+      "kind": "body",
+      "origin": [
+        "b00002"
+      ]
+    },
+    {
+      "id": "b00003",
+      "text": "2. Security\n",
+      "kind": "body",
+      "origin": [
+        "b00003"
+      ]
+    },
+    {
+      "id": "b00004",
+      "text": "Processor will maintain the security measures in Schedule A.\n",
+      "kind": "body",
+      "origin": [
+        "b00004"
+      ]
+    }
+  ],
+  "decisions": {},
+  "ledger": []
+}

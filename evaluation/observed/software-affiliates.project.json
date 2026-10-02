@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "source": "Article 1 License\n\nProvider grants Customer a nonexclusive license for Customer's internal business operations. No person other than Customer may access the software.\n\nArticle 2 Confidentiality\n\nEach party shall keep the other's nonpublic information confidential for three years after termination.\n",
+  "source_sha256": "4b4b5a3a77ab7b99ec5aa407ae275f04cb7ab7c5ca4d712ccece33be156c1eee",
+  "version": 0,
+  "blocks": [
+    {
+      "id": "b00001",
+      "text": "Article 1 License\n",
+      "kind": "body",
+      "origin": [
+        "b00001"
+      ]
+    },
+    {
+      "id": "b00002",
+      "text": "Provider grants Customer a nonexclusive license for Customer's internal business operations. No person other than Customer may access the software.\n",
+      "kind": "body",
+      "origin": [
+        "b00002"
+      ]
+    },
+    {
+      "id": "b00003",
+      "text": "Article 2 Confidentiality\n",
+      "kind": "body",
+      "origin": [
+        "b00003"
+      ]
+    },
+    {
+      "id": "b00004",
+      "text": "Each party shall keep the other's nonpublic information confidential for three years after termination.\n",
+      "kind": "body",
+      "origin": [
+        "b00004"
+      ]
+    }
+  ],
+  "decisions": {},
+  "ledger": []
+}

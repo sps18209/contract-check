@@ -4,6 +4,27 @@ from contract_check.review import choice_template, validate_choices
 
 
 class ChoiceTest(unittest.TestCase):
+    def test_content_edit_without_classification_still_requires_choice(self):
+        project = ingest('Payment due in 10 days.')
+        plan = {'base_version': 0, 'source_sha256': project['source_sha256'],
+                'operations': [{'action': 'replace', 'id': 'b00001', 'before': project['blocks'][0]['text'],
+                                'after': 'Payment due in 30 days.', 'approved': True, 'reason': 'Edit'}]}
+        with self.assertRaisesRegex(ValueError, 'content edit needs an adopted'):
+            apply(project, plan)
+        plan['operations'][0].update(classification='formatting')
+        with self.assertRaisesRegex(ValueError, 'content edit needs an adopted'):
+            apply(project, plan)
+
+    def test_formatting_only_edit_needs_no_finding(self):
+        project = ingest('Payment  due in 10 days.')
+        result = apply(project, {'base_version': 0, 'source_sha256': project['source_sha256'],
+                                 'operations': [{'action': 'replace', 'id': 'b00001',
+                                                 'before': project['blocks'][0]['text'],
+                                                 'after': 'Payment due in 10 days.',
+                                                 'classification': 'formatting',
+                                                 'approved': True, 'reason': 'Spacing'}]})
+        self.assertEqual(result['blocks'][0]['text'], 'Payment due in 10 days.')
+
     def test_retained_finding_cannot_authorize_edit(self):
         project = ingest('Seller shall give 10 days notice.')
         review = {'source_sha256': project['source_sha256'], 'project_version': 0,
@@ -19,7 +40,7 @@ class ChoiceTest(unittest.TestCase):
                 'operations': [{'action': 'replace', 'id': 'b00001', 'before': project['blocks'][0]['text'],
                                 'after': 'Seller shall give 30 days notice.', 'reason': 'Change period',
                                 'approved': True, 'classification': 'substantive', 'finding_id': 'F-1'}]}
-        with self.assertRaisesRegex(ValueError, 'not linked to an adopted'):
+        with self.assertRaisesRegex(ValueError, 'content edit needs an adopted'):
             apply(project, plan, review, choices)
         choices['selections'][0]['choice'] = 'adopt'
         revised = apply(project, plan, review, choices)

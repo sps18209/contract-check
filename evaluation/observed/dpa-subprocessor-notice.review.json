@@ -1,0 +1,42 @@
+{
+  "source_sha256": "c846bb06a23ee6e081a61313eb7479e3796ab550592f85a53962e97059415395",
+  "project_version": 0,
+  "context": {
+    "contract_type": "data processing agreement excerpt",
+    "represented_party": "Customer/controller",
+    "objective": "Preserve negotiated advance notice and opportunity to object to new subprocessors without an absolute veto",
+    "jurisdiction": "unknown"
+  },
+  "findings": [
+    {
+      "id": "F-1", "lens": "deal", "status": "proposed",
+      "evidence": [{"block_id": "b00002", "quote": "Processor will notify Customer within 15 days after appointment."}],
+      "affected_blocks": ["b00002"],
+      "issue": "The supplied negotiated instruction calls for notice at least 15 days before adding a subprocessor, while the draft permits notice within 15 days after appointment. The competing timing readings are advance notice versus notice after the event.",
+      "consequence": "Customer could learn of a new subprocessor only after it has been appointed and cannot use the agreed lead time to assess it.",
+      "proposal": "Require Processor to notify Customer at least 15 days before appointing an additional subprocessor; identify the intended appointment date in the notice.",
+      "uncertainty": "Notice delivery method and whether the 15 days are calendar days are not supplied.",
+      "decision_needed": "Confirm the notice channel, date calculation, and whether the appointment date must appear in the notice."
+    },
+    {
+      "id": "F-2", "lens": "deal", "status": "proposed",
+      "evidence": [{"block_id": "b00002", "quote": "Customer may send questions to Processor."}],
+      "affected_blocks": ["b00002"],
+      "issue": "A right to send questions does not expressly give Customer the negotiated chance to object. The sentence could be read as allowing only information requests, or as informal dialogue that may include an objection without any agreed effect.",
+      "consequence": "The parties may disagree over whether an objection is permitted, when it must be made, and what Processor must do with it. An absolute veto was not negotiated.",
+      "proposal": "State that Customer may object during the advance notice period and specify how the parties handle an objection, without making Customer's approval an absolute condition to appointment.",
+      "uncertainty": "The grounds for objection, response process, and consequence of an unresolved objection were not supplied; these are deal choices, not jurisdiction-specific defaults.",
+      "decision_needed": "Choose the objection window, permitted grounds if any, and process or remedy if the objection remains unresolved."
+    },
+    {
+      "id": "F-3", "lens": "operational", "status": "proposed",
+      "evidence": [{"block_id": "b00004", "quote": "Processor will maintain the security measures in Schedule A."}],
+      "affected_blocks": ["b00004"],
+      "issue": "The provided excerpt refers to Schedule A, but its content was not provided for review. This is a scope and evidence question, not a conclusion that the agreement lacks the schedule.",
+      "consequence": "The actual security measures and the completeness of this cross-reference cannot be checked from the excerpt.",
+      "proposal": "Obtain and review Schedule A against this reference before finalizing the security provision.",
+      "uncertainty": "Whether Schedule A exists in the complete agreement and what it requires are unknown.",
+      "decision_needed": "Provide Schedule A or confirm this review is limited to the supplied excerpt."
+    }
+  ]
+}

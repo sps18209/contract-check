@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from contract_check.core import digest
+from contract_check.core import validate
 from contract_check.review import validate_review
 
 ROOT = Path(__file__).resolve().parent
@@ -26,8 +26,9 @@ def score(directory):
         try:
             project = json.loads(project_path.read_text(encoding='utf-8'))
             review = json.loads(review_path.read_text(encoding='utf-8'))
-            if project.get('source_sha256') != digest(case['contract']):
-                raise ValueError('case source does not match fixture')
+            validate(project)
+            if project['source'].rstrip('\n') != case['contract'].rstrip('\n'):
+                raise ValueError('case source does not match fixture (except terminal newlines)')
             validate_review(project, review)
             cited_ids = {e['block_id'] for f in review['findings'] for e in f['evidence']}
             blocks = {b['id']: b['text'] for b in project['blocks']}
