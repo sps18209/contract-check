@@ -85,14 +85,15 @@ def apply(project: dict[str, Any], plan: dict[str, Any], review=None, choices=No
         if not isinstance(key, str) or not isinstance(value, dict) or value.get('status') not in ('include', 'omit', 'defer') or not value.get('reason'):
             raise ValueError('invalid decision')
 
-    def authorized(op, before=''):
+    def authorized(op, before='', existing_kind=None):
         action = op['action']
         if action == 'label':
             return
         if action == 'replace' and op.get('classification') == 'formatting' and re.sub(r'\s+', '', before) == re.sub(r'\s+', '', op.get('after', '')):
             return
         section = decisions.get(op.get('section_decision_id'), {})
-        if action in ('insert', 'delete') and op.get('kind') == 'heading' and section.get('status') == ('include' if action == 'insert' else 'omit'):
+        is_heading_change = (action == 'insert' and op.get('kind') == 'heading') or (action == 'delete' and existing_kind == 'heading')
+        if is_heading_change and section.get('status') == ('include' if action == 'insert' else 'omit'):
             return
         if not op.get('finding_id') or selected.get(op['finding_id']) not in ('adopt', 'custom'):
             raise ValueError('content edit needs an adopted finding or matching section decision')
@@ -115,7 +116,7 @@ def apply(project: dict[str, Any], plan: dict[str, Any], review=None, choices=No
         else:
             if bid not in blocks or blocks[bid]['text'] != op.get('before'):
                 raise ValueError('unknown target or source mismatch')
-            authorized(op, blocks[bid]['text'])
+            authorized(op, blocks[bid]['text'], blocks[bid]['kind'])
             block = blocks[bid]
             if action == 'replace':
                 if not isinstance(op.get('after'), str):

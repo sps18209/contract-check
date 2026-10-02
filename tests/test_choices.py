@@ -25,6 +25,16 @@ class ChoiceTest(unittest.TestCase):
                                                  'approved': True, 'reason': 'Spacing'}]})
         self.assertEqual(result['blocks'][0]['text'], 'Payment due in 10 days.')
 
+    def test_body_deletion_cannot_claim_heading_omission(self):
+        project = ingest('Payment due in 10 days.')
+        plan = {'base_version': 0, 'source_sha256': project['source_sha256'],
+                'decisions': {'payment': {'status': 'omit', 'reason': 'Omit heading only'}},
+                'operations': [{'action': 'delete', 'id': 'b00001', 'before': project['blocks'][0]['text'],
+                                'kind': 'heading', 'section_decision_id': 'payment',
+                                'approved': True, 'reason': 'Omit'}]}
+        with self.assertRaisesRegex(ValueError, 'content edit needs an adopted'):
+            apply(project, plan)
+
     def test_retained_finding_cannot_authorize_edit(self):
         project = ingest('Seller shall give 10 days notice.')
         review = {'source_sha256': project['source_sha256'], 'project_version': 0,
