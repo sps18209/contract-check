@@ -58,6 +58,15 @@ class ContractWorkflow(unittest.TestCase):
                                             'reason': 'Client removed fee', 'approved': True}]})
         self.assertTrue(any(c['change'] == 'delete' for c in compare(p, revised)['changes']))
 
+    def test_article_source_reference_kind(self):
+        p = ingest('Article 4 Scope\n\nSee Article 4.')
+        p = apply(p, {'base_version': 0, 'source_sha256': p['source_sha256'],
+                      'operations': [{'action': 'label', 'id': 'b00001', 'before': p['blocks'][0]['text'],
+                                      'approved': True, 'reason': 'Existing heading', 'kind': 'heading',
+                                      'title': 'Scope', 'level': 1, 'old_label': '4', 'old_kind': 'Article'}]})
+        text, _ = render(p, 'articles', update_refs=True)
+        self.assertIn('See Article 1.', text)
+
     def test_no_silent_hierarchy_skip(self):
         p = labeled()
         p['blocks'][0]['level'] = 2

@@ -49,6 +49,8 @@ def validate(project: dict[str, Any]) -> None:
                 raise ValueError('invalid heading')
             if b.get('old_label') is not None and not re.fullmatch(r'\d+(?:\.\d+)*', b['old_label']):
                 raise ValueError('invalid old_label')
+            if b.get('old_kind') is not None and b['old_kind'] not in ('Article', 'Section'):
+                raise ValueError('invalid old_kind')
         if not isinstance(b.get('origin'), list) or not all(isinstance(x, str) for x in b['origin']):
             raise ValueError('invalid origin')
     if not isinstance(project.get('decisions'), dict) or not isinstance(project.get('ledger'), list):
@@ -95,7 +97,7 @@ def apply(project: dict[str, Any], plan: dict[str, Any]) -> dict[str, Any]:
         if action in ('label', 'insert', 'replace') and 'kind' in op:
             block['kind'] = op['kind']
         if action in ('label', 'insert', 'replace') and block['kind'] == 'heading':
-            for field in ('title', 'level', 'old_label'):
+            for field in ('title', 'level', 'old_label', 'old_kind'):
                 if field in op:
                     block[field] = op[field]
         result['ledger'].append({'version': project['version'] + 1, **copy.deepcopy(op)})

@@ -10,6 +10,7 @@ python -m contract_check apply project.json plan.json revised.json
 python -m contract_check render revised.json revised.txt --style decimal --update-refs --map-output map.json
 python -m contract_check check revised.json revised.txt
 python -m contract_check compare project.json revised.json changes.json
+python -m contract_check audit project.json revised.json flags.json
 python -m contract_check validate-review revised.json review.json
 python -m unittest discover -s tests -v
 ```

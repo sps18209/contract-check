@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from .core import ingest, apply, render, check, compare
 from .review import validate_review
+from .audit import audit
 
 
 def load(path):
@@ -19,7 +20,8 @@ def main(argv=None):
     sub = p.add_subparsers(dest='command', required=True)
     for name, args in [('ingest', ['input', 'output']), ('apply', ['project', 'plan', 'output']),
                        ('render', ['project', 'output']), ('check', ['project', 'input']),
-                       ('compare', ['original', 'revised', 'output']), ('validate-review', ['project', 'review'])]:
+                       ('compare', ['original', 'revised', 'output']), ('audit', ['original', 'revised', 'output']),
+                       ('validate-review', ['project', 'review'])]:
         cmd = sub.add_parser(name)
         for arg in args:
             cmd.add_argument(arg)
@@ -45,6 +47,8 @@ def main(argv=None):
             return 2 if any(report[k] for k in ('duplicate_labels', 'unresolved_references', 'duplicate_definitions')) else 0
         elif a.command == 'compare':
             save(a.output, compare(load(a.original), load(a.revised), a.style))
+        elif a.command == 'audit':
+            save(a.output, audit(load(a.original), load(a.revised)))
         elif a.command == 'validate-review':
             print(json.dumps(validate_review(load(a.project), load(a.review)), indent=2))
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
