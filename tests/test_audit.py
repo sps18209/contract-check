@@ -14,5 +14,5 @@ class AuditTest(unittest.TestCase):
         changes = audit(original, revised)['flags'][0]['changes']
         self.assertEqual(changes['quantities']['before'], ['$10,000'])
         self.assertEqual(changes['quantities']['after'], ['$100,000'])
-        self.assertEqual(changes['control_words']['before'], ['must', 'not'])
-        self.assertEqual(changes['control_words']['after'], ['may'])
+        self.assertEqual(changes['control_words']['before'], ['must', 'not', 'exceed'])
+        self.assertEqual(changes['control_words']['after'], ['may', 'exceed'])

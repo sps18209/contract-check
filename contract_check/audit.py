@@ -3,7 +3,7 @@ import re
 from .core import validate
 
 QUANTITY = re.compile(r'(?<!\w)(?:\$\s*)?\d[\d,]*(?:\.\d+)?\s*(?:%|percent|days?|months?|years?|hours?)?', re.I)
-CONTROL = re.compile(r'\b(?:not|never|unless|except|only|must|shall|may|will|before|after|within)\b', re.I)
+CONTROL = re.compile(r'\b(?:not|never|unless|except|only|must|shall|may|will|before|after|within|equal|exceed|greater|less|at\s+least|more\s+than|up\s+to|including|exclusive|inclusive)\b', re.I)
 
 
 def _tokens(pattern, text):
