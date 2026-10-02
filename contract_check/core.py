@@ -12,7 +12,7 @@ SCHEMA = 1
 STYLES = ('preserve', 'decimal', 'articles')
 HEADING = re.compile(r'^(?:(Article|Section)\s+)?(\d+(?:\.\d+)*)(?:\.)?\s+(.+)$', re.I)
 REF = re.compile(r'\b(Article|Section)\s+(\d+(?:\.\d+)*)\b', re.I)
-UNSUPPORTED_REF = re.compile(r'\bSections\s+\d|\b(?:Section|Article)\s+\d+(?:\.\d+)*(?:\([a-z0-9]+\)|\s*(?:-|–|through|to)\s*\d)', re.I)
+UNSUPPORTED_REF = re.compile(r'\bSections\s+\d|\b(?:Section|Article)\s+\d+(?:\.\d+)*(?:\([a-z0-9]+\)|\s*(?:-|–|through|to)\s*\d)|§\s*\d|\b(?:Clause|Paragraph|Schedule|Exhibit)\s+[A-Z0-9]', re.I)
 DEFINED = re.compile(r'[“"]([^“”"]+)[”"]\s+(?:means|shall mean)\b', re.I)
 
 
@@ -52,6 +52,10 @@ def validate(project: dict[str, Any]) -> None:
                 raise ValueError('invalid old_label')
             if b.get('old_kind') is not None and b['old_kind'] not in ('Article', 'Section'):
                 raise ValueError('invalid old_kind')
+            raw = b['text'].strip()
+            parsed = HEADING.fullmatch(raw)
+            if '\n' in raw or (raw != b['title'] and (not parsed or parsed.group(3) != b['title'])):
+                raise ValueError('heading text contains content beyond the confirmed title')
         if not isinstance(b.get('origin'), list) or not all(isinstance(x, str) for x in b['origin']):
             raise ValueError('invalid origin')
     if not isinstance(project.get('decisions'), dict) or not isinstance(project.get('ledger'), list):

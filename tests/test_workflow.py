@@ -58,6 +58,14 @@ class ContractWorkflow(unittest.TestCase):
             render(p, 'decimal', update_refs=True)
         self.assertIn('Section 1(a)', check(p, p['blocks'][1]['text'])['unsupported_references'])
 
+    def test_label_cannot_discard_operative_text(self):
+        p = ingest('1. Fees\nVendor shall pay $100.')
+        with self.assertRaisesRegex(ValueError, 'heading text contains content'):
+            apply(p, {'base_version': 0, 'source_sha256': p['source_sha256'],
+                      'operations': [{'action': 'label', 'id': 'b00001', 'before': p['blocks'][0]['text'],
+                                      'approved': True, 'reason': 'Heading', 'kind': 'heading',
+                                      'title': 'Fees', 'level': 1, 'old_label': '1'}]})
+
     def test_deleted_block_visible_in_comparison(self):
         p = labeled()
         revised = apply(p, {'base_version': p['version'], 'source_sha256': p['source_sha256'],
