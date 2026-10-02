@@ -14,6 +14,8 @@ python -m contract_check audit project.json revised.json flags.json
 python -m contract_check validate-review revised.json review.json
 python -m contract_check extract-docx agreement.docx agreement.txt extraction.json
 python -m contract_check cards revised.json review.json choices.md
+python -m contract_check choice-template revised.json review.json choices.json
+python -m contract_check validate-choices revised.json review.json choices.json
 python -m contract_check inventory project.json inventory.json
 python -m contract_check report project.json revised.json report.md
 python -m unittest discover -s tests -v

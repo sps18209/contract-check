@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 from .core import ingest, apply, render, check, compare
-from .review import validate_review
+from .review import validate_review, validate_choices, choice_template
 from .audit import audit
 from .docx import extract_docx
 from .presentation import decision_cards, revision_report
@@ -28,7 +28,9 @@ def main(argv=None):
                        ('extract-docx', ['input', 'output', 'manifest']),
                        ('cards', ['project', 'review', 'output']),
                        ('report', ['original', 'revised', 'output']),
-                       ('inventory', ['project', 'output'])]:
+                       ('inventory', ['project', 'output']),
+                       ('choice-template', ['project', 'review', 'output']),
+                       ('validate-choices', ['project', 'review', 'choices'])]:
         cmd = sub.add_parser(name)
         for arg in args:
             cmd.add_argument(arg)
@@ -37,12 +39,17 @@ def main(argv=None):
         if name == 'render':
             cmd.add_argument('--update-refs', action='store_true')
             cmd.add_argument('--map-output')
+        if name == 'apply':
+            cmd.add_argument('--review')
+            cmd.add_argument('--choices')
     a = p.parse_args(argv)
     try:
         if a.command == 'ingest':
             save(a.output, ingest(Path(a.input).read_text(encoding='utf-8')))
         elif a.command == 'apply':
-            save(a.output, apply(load(a.project), load(a.plan)))
+            save(a.output, apply(load(a.project), load(a.plan),
+                                 load(a.review) if a.review else None,
+                                 load(a.choices) if a.choices else None))
         elif a.command == 'render':
             text, info = render(load(a.project), a.style, a.update_refs)
             Path(a.output).write_text(text, encoding='utf-8')
@@ -68,6 +75,10 @@ def main(argv=None):
             Path(a.output).write_text(revision_report(load(a.original), load(a.revised), a.style), encoding='utf-8')
         elif a.command == 'inventory':
             save(a.output, inventory(load(a.project)))
+        elif a.command == 'choice-template':
+            save(a.output, choice_template(load(a.project), load(a.review)))
+        elif a.command == 'validate-choices':
+            print(json.dumps(validate_choices(load(a.project), load(a.review), load(a.choices)), indent=2))
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
         p.exit(1, f'contract-check: {error}\n')
     return 0

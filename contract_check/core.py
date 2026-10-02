@@ -63,16 +63,28 @@ def _approval(op: dict[str, Any]) -> None:
         raise ValueError('each operation requires approval and reason')
 
 
-def apply(project: dict[str, Any], plan: dict[str, Any]) -> dict[str, Any]:
+def apply(project: dict[str, Any], plan: dict[str, Any], review=None, choices=None) -> dict[str, Any]:
     validate(project)
     if plan.get('base_version') != project['version'] or plan.get('source_sha256') != project['source_sha256']:
         raise ValueError('stale or unrelated plan')
+    if (review is None) != (choices is None):
+        raise ValueError('provide both review and choices')
+    selected = {}
+    if review is not None:
+        from .review import validate_choices
+        validate_choices(project, review, choices)
+        selected = {s['finding_id']: s['choice'] for s in choices['selections']}
     result = copy.deepcopy(project)
     blocks = {b['id']: b for b in result['blocks']}
     seen = set()
     for op in plan.get('operations', []):
         _approval(op)
         action, bid = op.get('action'), op.get('id')
+        if op.get('finding_id'):
+            if selected.get(op['finding_id']) not in ('adopt', 'custom'):
+                raise ValueError('edit is not linked to an adopted finding')
+        elif op.get('classification') == 'substantive':
+            raise ValueError('substantive edit needs an adopted finding')
         if action not in ('replace', 'delete', 'insert', 'label') or not isinstance(bid, str) or bid in seen:
             raise ValueError('invalid or repeated operation')
         seen.add(bid)
