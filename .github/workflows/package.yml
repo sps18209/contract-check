@@ -20,15 +20,18 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Build and verify archives
         run: python scripts/package_release.py "$RUNNER_TEMP/contract-check-release"
+      - name: Build and validate website downloads
+        run: python scripts/build_site.py
       - name: Publish development downloads
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.2.3 \
+          gh release create v0.2.4 \
             "$RUNNER_TEMP/contract-check-release/contract-check-2026-development.zip" \
             "$RUNNER_TEMP/contract-check-release/contract-check-plugin.zip" \
             "$RUNNER_TEMP/contract-check-release/contract-check-direct-upload.zip" \
+            "$RUNNER_TEMP/contract-check-release/contract-check-claude-skill.zip" \
             "$RUNNER_TEMP/contract-check-release/SHA256SUMS.txt" \
             --target "$GITHUB_SHA" --prerelease \
-            --title "Contract Check 0.2.3 development" \
-            --notes "Adds evidence-linked enforcement issue assessment, conservative abstention and authority attestation, a loopback-only optional model adapter, and a disabled-by-default outcome research experiment. No individual enforcement probability is produced. Development edition; lawyer review and validation on real sanitized agreements remain separate gates."
+            --title "Contract Check 0.2.4 development" \
+            --notes "Includes matching ChatGPT plugin, direct-upload skill, and Claude skill archives with the evidence-linked enforcement issue module. No individual enforcement probability is produced. Development edition; lawyer review and validation on real sanitized agreements remain separate gates."

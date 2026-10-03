@@ -4,13 +4,14 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
 from zipfile import ZipFile
 from build_skill import build, _write
 
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 
 
 def package(output):
@@ -81,11 +82,18 @@ def package(output):
         assert "SKILL.md" in archive.namelist()
         assert "references/transaction-review.md" in archive.namelist()
         assert len([name for name in archive.namelist() if name.startswith("assets/forms/")]) == 4
+    claude = output / "contract-check-claude-skill.zip"
+    shutil.copyfile(skill, claude)
+    with ZipFile(claude) as archive:
+        assert "contract-check/SKILL.md" in archive.namelist()
+        assert "contract-check/references/enforcement-analysis.md" in archive.namelist()
+        assert "contract-check/scripts/contract_check/enforcement/analysis.py" in archive.namelist()
+        assert all(name.startswith("contract-check/") for name in archive.namelist())
     checksums = []
-    for artifact in (skill, plugin, direct):
+    for artifact in (skill, plugin, direct, claude):
         checksums.append(hashlib.sha256(artifact.read_bytes()).hexdigest() + "  " + artifact.name)
     (output / "SHA256SUMS.txt").write_text("\n".join(checksums) + "\n")
-    print("Verified skill and plugin archives, all four forms, references, hashes, and extracted runtime.")
+    print("Verified ChatGPT, Claude, and plugin archives, all four forms, references, hashes, and extracted runtime.")
 
 
 if __name__ == "__main__":
