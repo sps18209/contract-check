@@ -39,4 +39,4 @@ jobs:
       - name: Save site download
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload v0.2.2 website/topcontractreview-site.zip --clobber
+        run: gh release upload v0.2.2 website/topcontractreview-site.zip website/screenshots/home-desktop.png website/screenshots/home-mobile.png --clobber
