@@ -10,7 +10,7 @@ import tempfile
 from zipfile import ZipFile
 from build_skill import build, _write
 
-VERSION = "0.2.2"
+VERSION = "0.2.3"
 
 
 def package(output):
@@ -31,7 +31,7 @@ def package(output):
             manifest = json.loads((root / "edition-manifest.json").read_text())
             for name, expected in manifest["files"].items():
                 assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
-            for name in ("SKILL.md", "references/runtime.md"):
+            for name in ("SKILL.md", "references/runtime.md", "references/enforcement-analysis.md"):
                 for link in re.findall(r"`((?:references/|assets/|scripts/)[^`]+)`", (root / name).read_text()):
                     if " " not in link:
                         assert (root / link).exists(), link
@@ -49,6 +49,8 @@ def package(output):
             ]:
                 subprocess.run(command + args, check=True, capture_output=True, text=True, cwd=temp)
             assert "Supplier must deliver" in (root / "clean.txt").read_text()
+            assert (root / "scripts/contract_check/enforcement/schema.py").is_file()
+            assert (root / "scripts/contract_check/enforcement/prediction/train.py").is_file()
     interface = {
         "displayName": "Contract Check",
         "shortDescription": "Review contracts with choices",
