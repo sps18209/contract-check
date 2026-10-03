@@ -74,6 +74,9 @@ def validate():
     with ZipFile(OUT / "downloads/contract-check-direct-upload.zip") as z:
         assert "SKILL.md" in z.namelist()
         assert len([n for n in z.namelist() if n.startswith("assets/forms/")]) == 4
+    with ZipFile(OUT / "downloads/contract-check-claude-skill.zip") as z:
+        assert "contract-check/SKILL.md" in z.namelist()
+        assert "contract-check/references/enforcement-analysis.md" in z.namelist()
     print(f"Verified {len(parsed)} HTML pages, internal links, fragments, and complete downloads.")
 
 
@@ -100,7 +103,7 @@ def build():
     downloads.mkdir()
     with tempfile.TemporaryDirectory() as temporary:
         package(temporary)
-        for name in ("contract-check-direct-upload.zip", "contract-check-plugin.zip", "contract-check-2026-development.zip", "SHA256SUMS.txt"):
+        for name in ("contract-check-direct-upload.zip", "contract-check-plugin.zip", "contract-check-2026-development.zip", "contract-check-claude-skill.zip", "SHA256SUMS.txt"):
             shutil.copy(Path(temporary) / name, downloads / name)
         shutil.copy(Path(temporary) / "contract-check-2026-development.zip", downloads / "contract-check.skill")
     urls = [ORIGIN + "/"] + [ORIGIN + "/" + slug + "/" for slug in pages]

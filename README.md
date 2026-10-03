@@ -30,6 +30,8 @@ The `plan.json` and review record formats are documented in `skill/references/`.
 
 Build a self-contained skill bundle with `python scripts/build_skill.py /tmp/contract-check.skill --edition-year 2026`. The archive includes the skill instructions, review references, a standard-library Python runtime under `scripts/`, and a per-file hash manifest marking lawyer review as pending. It does not require the repository after extraction. It does not include the Contract Navigator textbook or any credentials. The storefront and re-download entitlements remain separate work.
 
+The release also publishes `contract-check-claude-skill.zip`. Its root is `contract-check/SKILL.md` with the same references, forms, and Python runtime. Upload the ZIP as a custom skill in Claude, or extract `contract-check/` into Claude Code's personal or project skills directory. The ChatGPT plugin and direct-upload bundles contain the same skill source. Host execution permissions and Python availability still determine whether the commands can run.
+
 ## Development sequence
 
 The development release establishes provenance, deliberate edits, structure and decision choices, mechanical checks, a review-record contract, DOCX text extraction, and self-contained packaging. Remaining gates: broader document fidelity and references; independent review on unseen and real sanitized contracts; host-specific installation and export verification; lawyer review and edition sign-off. Track commercial licensing of third-party source material separately; the Contract Navigator textbook is not included.
