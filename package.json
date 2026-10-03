@@ -1,0 +1,13 @@
+{
+  "name": "topcontractreview",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "python3 scripts/build_site.py",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}
