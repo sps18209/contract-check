@@ -1,5 +1,11 @@
 # Runtime and host integration
 
+## Forms
+
+Use `assets/forms/intake-and-term-sheet.md` for intake and deal comparison, and `assets/forms/agreement-outline.md` for optional drafting sections. Copy `assets/forms/review-record.json` and `assets/forms/revision-plan.json` into the working record and replace every placeholder with current project data. These are intentionally incomplete forms, not validated records. Keep `approved: false` until the user's substantive decision is recorded; do not manufacture approval. For missing provisions, follow the absence-basis format in `review-record.md` rather than inventing a quotation. Generate decision cards and a choices form from the actual review with `cards` and `choice-template`; validate completed choices before applying edits. Generate structure choices with `preview` and the final comparison/report with `compare` and `report`.
+
+## Commands
+
 In a distributed skill folder, run `python scripts/contract_check_cli.py`. In the source repository, run `python -m contract_check` from the repository root, or install with `python -m pip install .` when package installation is available. The core uses only the Python standard library. Commands:
 
 - `ingest INPUT.txt PROJECT.json` stores the exact UTF-8 source and splits at blank lines into body blocks with stable IDs. It does not infer clauses or headings.

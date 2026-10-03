@@ -1,0 +1,17 @@
+{
+  "base_version": null,
+  "source_sha256": "<copy from current project>",
+  "operations": [
+    {
+      "action": "replace",
+      "id": "<current block ID>",
+      "before": "<exact current block text>",
+      "after": "<user-approved replacement text>",
+      "reason": "<record the user's decision and reason>",
+      "approved": false,
+      "classification": "substantive",
+      "finding_id": "<adopted or custom finding ID>"
+    }
+  ],
+  "decisions": {}
+}

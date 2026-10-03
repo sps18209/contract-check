@@ -1,0 +1,24 @@
+{
+  "source_sha256": "<copy from current project>",
+  "project_version": null,
+  "context": {
+    "contract_type": "unknown",
+    "represented_party": "unknown",
+    "objective": "unknown",
+    "jurisdiction": "unknown"
+  },
+  "findings": [
+    {
+      "id": "F-1",
+      "lens": "deal",
+      "status": "proposed",
+      "evidence": [{"block_id": "<current block ID>", "quote": "<verbatim current passage>"}],
+      "affected_blocks": ["<current block ID>"],
+      "issue": "<observed problem or competing readings>",
+      "consequence": "<business or drafting effect>",
+      "proposal": "<specific option and whose interests it changes>",
+      "uncertainty": "<missing facts, authority, or limits>",
+      "decision_needed": "<material choice required>"
+    }
+  ]
+}
