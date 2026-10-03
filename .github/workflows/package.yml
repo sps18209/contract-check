@@ -24,11 +24,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.2.2 \
+          gh release create v0.2.3 \
             "$RUNNER_TEMP/contract-check-release/contract-check-2026-development.zip" \
             "$RUNNER_TEMP/contract-check-release/contract-check-plugin.zip" \
             "$RUNNER_TEMP/contract-check-release/contract-check-direct-upload.zip" \
             "$RUNNER_TEMP/contract-check-release/SHA256SUMS.txt" \
             --target "$GITHUB_SHA" --prerelease \
-            --title "Contract Check 0.2.2 development" \
-            --notes "Complete portable skill and ChatGPT plugin packages with all four review forms, references, and Python runtime. Development edition; host behavior and lawyer review remain separate validation steps."
+            --title "Contract Check 0.2.3 development" \
+            --notes "Adds evidence-linked enforcement issue assessment, conservative abstention and authority attestation, a loopback-only optional model adapter, and a disabled-by-default outcome research experiment. No individual enforcement probability is produced. Development edition; lawyer review and validation on real sanitized agreements remain separate gates."
