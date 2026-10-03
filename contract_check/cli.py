@@ -8,6 +8,10 @@ from .audit import audit
 from .docx import extract_docx
 from .presentation import decision_cards, revision_report, structure_preview
 from .inventory import inventory
+from .enforcement import assess, validate_request, validate_assessment
+from .enforcement.issues import request_template
+from .enforcement.report import render_assessment
+from .enforcement.providers.local_llm import LocalLLMProvider
 
 
 def load(path):
@@ -30,7 +34,11 @@ def main(argv=None):
                        ('report', ['original', 'revised', 'output']),
                        ('inventory', ['project', 'output']), ('preview', ['project', 'output']),
                        ('choice-template', ['project', 'review', 'output']),
-                       ('validate-choices', ['project', 'review', 'choices'])]:
+                       ('validate-choices', ['project', 'review', 'choices']),
+                       ('enforcement-template', ['project', 'review', 'output']),
+                       ('enforcement-validate', ['project', 'review', 'request']),
+                       ('enforcement-assess', ['project', 'review', 'request', 'output']),
+                       ('enforcement-report', ['project', 'review', 'request', 'assessment', 'output'])]:
         cmd = sub.add_parser(name)
         for arg in args:
             cmd.add_argument(arg)
@@ -42,6 +50,12 @@ def main(argv=None):
         if name == 'apply':
             cmd.add_argument('--review')
             cmd.add_argument('--choices')
+        if name == 'enforcement-assess':
+            cmd.add_argument('--authorities')
+            cmd.add_argument('--local-endpoint')
+            cmd.add_argument('--model')
+        if name == 'enforcement-report':
+            cmd.add_argument('--authorities')
     a = p.parse_args(argv)
     try:
         if a.command == 'ingest':
@@ -81,6 +95,21 @@ def main(argv=None):
             save(a.output, choice_template(load(a.project), load(a.review)))
         elif a.command == 'validate-choices':
             print(json.dumps(validate_choices(load(a.project), load(a.review), load(a.choices)), indent=2))
+        elif a.command == 'enforcement-template':
+            save(a.output, request_template(load(a.project), load(a.review)))
+        elif a.command == 'enforcement-validate':
+            print(json.dumps(validate_request(load(a.project), load(a.review), load(a.request)), indent=2))
+        elif a.command == 'enforcement-assess':
+            if bool(a.local_endpoint) != bool(a.model):
+                raise ValueError('--local-endpoint and --model must be supplied together')
+            provider = LocalLLMProvider(a.local_endpoint, a.model) if a.local_endpoint else None
+            save(a.output, assess(load(a.project), load(a.review), load(a.request),
+                                  load(a.authorities) if a.authorities else None, provider))
+        elif a.command == 'enforcement-report':
+            project, review, request, assessment = load(a.project), load(a.review), load(a.request), load(a.assessment)
+            validate_assessment(project, review, request, assessment,
+                                load(a.authorities) if a.authorities else None)
+            Path(a.output).write_text(render_assessment(assessment), encoding='utf-8')
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
         p.exit(1, f'contract-check: {error}\n')
     return 0

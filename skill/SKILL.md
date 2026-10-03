@@ -7,6 +7,8 @@ description: Review and revise contracts with structural choices, evidence-linke
 
 Preserve the transaction's intent and every explicit user decision. Read `references/review-method.md` for analytical method, `references/transaction-review.md` when assessing deal terms, performance, payments, warranties, or interpretive issues, `references/review-record.md` for findings, and `references/runtime.md` before running the engine. This edition is a development release; do not call it lawyer-reviewed until Sage has reviewed its rules and representative outputs.
 
+For a specific enforcement question, read `references/enforcement-analysis.md`. Keep its assessment separate from an approved edit.
+
 From an installed bundle, run `python scripts/contract_check_cli.py` for the commands below. From the source repository, run `python -m contract_check` at the repository root. Use the host's code tool when available.
 
 Use the intake/term-sheet and agreement-outline forms in `assets/forms/` where useful. Use the JSON review and revision-plan forms with the current project; generate choices, decision cards, structure previews, comparisons, and reports with the runtime commands. Read the Forms section of `references/runtime.md` before populating a form. Forms do not grant approval or establish legal completeness.

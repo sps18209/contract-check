@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "Auditable contract structure and revision engine"
 requires-python = ">=3.10"
 
+[project.optional-dependencies]
+prediction = ["scikit-learn>=1.4,<2"]
+
 [project.scripts]
 contract-check = "contract_check.cli:main"
 

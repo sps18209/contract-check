@@ -19,10 +19,14 @@ python -m contract_check validate-choices revised.json review.json choices.json
 python -m contract_check inventory project.json inventory.json
 python -m contract_check preview revised.json structure.md
 python -m contract_check report project.json revised.json report.md
+python -m contract_check enforcement-template project.json review.json enforcement-request.json
+python -m contract_check enforcement-validate project.json review.json enforcement-request.json
+python -m contract_check enforcement-assess project.json review.json enforcement-request.json assessment.json --authorities authorities.json
+python -m contract_check enforcement-report project.json review.json enforcement-request.json assessment.json assessment.md --authorities authorities.json
 python -m unittest discover -s tests -v
 ```
 
-The `plan.json` and review record formats are documented in `skill/references/`. The DOCX extractor provides ordered plain text and an inspection manifest; it does not preserve layout or every ancillary part. PDF/image extraction, current-law research, and document export depend on host capabilities. Substantive review is guided by the skill and requires human verification. Do not run client documents through a third-party service without appropriate authorization. This is not yet a certified annual edition or a ready-to-sell product.
+The `plan.json` and review record formats are documented in `skill/references/`. The optional enforcement module assesses defined provision-level questions using cited contract text and supplied authority excerpts. It abstains on missing inputs and produces no legal outcome probability. Its source-text check does not authenticate an authority or establish current law. See `skill/references/enforcement-analysis.md`. Local model use is optional and restricted to a loopback endpoint. The separate `prediction` research module requires explicit opt-in and outcome labels; it is not exposed through the contract CLI. The DOCX extractor provides ordered plain text and an inspection manifest; it does not preserve layout or every ancillary part. PDF/image extraction, current-law research, and document export depend on host capabilities. Substantive review is guided by the skill and requires human verification. Do not run client documents through a third-party service without appropriate authorization. This is not yet a certified annual edition or a ready-to-sell product.
 
 Build a self-contained skill bundle with `python scripts/build_skill.py /tmp/contract-check.skill --edition-year 2026`. The archive includes the skill instructions, review references, a standard-library Python runtime under `scripts/`, and a per-file hash manifest marking lawyer review as pending. It does not require the repository after extraction. It does not include the Contract Navigator textbook or any credentials. The storefront and re-download entitlements remain separate work.
 
