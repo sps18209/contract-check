@@ -10,7 +10,7 @@ import tempfile
 from zipfile import ZipFile
 from build_skill import build, _write
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 
 
 def package(output):
@@ -71,8 +71,16 @@ def package(output):
         _write(target, "contract-check/.codex-plugin/plugin.json", (json.dumps(legacy, indent=2) + "\n").encode())
         for name in source.namelist():
             _write(target, name.replace("contract-check/", "contract-check/skills/contract-check/", 1), source.read(name))
+    direct = output / "contract-check-direct-upload.zip"
+    with ZipFile(skill) as source, ZipFile(direct, "w") as target:
+        for name in source.namelist():
+            _write(target, name.removeprefix("contract-check/"), source.read(name))
+    with ZipFile(direct) as archive:
+        assert "SKILL.md" in archive.namelist()
+        assert "references/transaction-review.md" in archive.namelist()
+        assert len([name for name in archive.namelist() if name.startswith("assets/forms/")]) == 4
     checksums = []
-    for artifact in (skill, plugin):
+    for artifact in (skill, plugin, direct):
         checksums.append(hashlib.sha256(artifact.read_bytes()).hexdigest() + "  " + artifact.name)
     (output / "SHA256SUMS.txt").write_text("\n".join(checksums) + "\n")
     print("Verified skill and plugin archives, all four forms, references, hashes, and extracted runtime.")
