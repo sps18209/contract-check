@@ -270,3 +270,16 @@ footer{background:var(--navy);color:var(--cream);padding:40px 0}footer a{color:v
 
 :root{--muted:#596476}.flow-step{text-decoration:none}.menu-btn{min-width:44px;min-height:44px}.resource-table{overflow-wrap:anywhere}
 @media(max-width:820px){html:not(.js) nav.links{display:flex;position:static;flex-direction:row;flex-wrap:wrap;gap:12px;padding:0}html:not(.js) .nav-inner{height:auto;min-height:66px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}html:not(.js) nav.links a{padding:4px 0}}
+
+/* Deal-first landing page */
+.hero-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.75fr);gap:8%;align-items:center}
+.hero h1{max-width:14ch;font-size:clamp(2.9rem,6vw,5.4rem)}
+.hero p.lead{max-width:54ch}.hero-caption{color:var(--muted);font-size:.82rem;max-width:54ch;margin-top:28px}
+.hero-sheet{background:#fffdf8;border:1px solid var(--line-2);padding:26px 30px;transform:rotate(1deg);box-shadow:12px 14px 0 var(--paper-2)}
+.hero-sheet p{border-bottom:1px solid var(--line);padding:13px 0;margin:0;font-family:var(--serif);font-size:1.14rem;line-height:1.4}
+.hero-sheet small,.sheet-kicker,.sheet-footer,.value-grid span{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--accent)}
+.sheet-footer{display:block;margin-top:18px;color:var(--muted)}
+.value-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;margin-top:38px}
+.value-grid article{border-top:2px solid var(--ink);padding-top:18px}.value-grid h3{margin:14px 0}.value-grid p{font-size:.92rem;color:var(--ink-2)}
+#prediction .review-note{margin-top:0}#faq .wrap{max-width:850px}
+@media(max-width:820px){.hero-layout,.value-grid{grid-template-columns:1fr}.hero-sheet{transform:none;box-shadow:6px 7px 0 var(--paper-2)}.hero h1{max-width:15ch}.value-grid{gap:12px}}
