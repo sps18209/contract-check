@@ -17,8 +17,11 @@ def verify_manifest(manifest: dict) -> dict[str, dict]:
             raise ValueError("duplicate authority or excerpt missing from source text")
         if type(item.get("reviewer_verified", False)) is not bool:
             raise ValueError("reviewer_verified must be Boolean")
+        if item.get("reviewer_verified") is True and any(not isinstance(item.get(k), str) or not item[k].strip() for k in ("reviewed_by", "reviewed_at", "review_note")):
+            raise ValueError("authority attestation needs reviewer, date, and note")
         result[item["id"]] = {key: item[key] for key in fields if key != "full_text"}
         result[item["id"]]["reviewer_verified"] = item.get("reviewer_verified", False)
+        result[item["id"]]["attestation"] = {k: item[k] for k in ("reviewed_by", "reviewed_at", "review_note")} if item.get("reviewer_verified") else None
         result[item["id"]]["source_sha256"] = hashlib.sha256(item["full_text"].encode("utf-8")).hexdigest()
         result[item["id"]]["verification"] = "excerpt_in_supplied_text"
     return result

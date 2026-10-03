@@ -50,7 +50,18 @@ def run_experiment(dataset: dict, *, enabled: bool = False) -> dict:
     test_scores = base.decision_function([_feature(r) for r in test]).reshape(-1, 1)
     probabilities = calibration.predict_proba(test_scores)[:, 1].tolist()
     report = metrics([r["outcome"] for r in test], probabilities)
+    prevalence = sum(r["outcome"] for r in train) / len(train)
+    baseline = metrics([r["outcome"] for r in test], [prevalence] * len(test))
+    def window(part):
+        return {"first_snapshot": part[0]["snapshot_at"], "last_snapshot": part[-1]["snapshot_at"], "n": len(part)}
+    groups = {}
+    for row in test:
+        key = row["jurisdiction"] + " | " + row["issue_type"]
+        groups[key] = groups.get(key, 0) + 1
     return {"status": "research_only", "event_definition": dataset["event_definition"],
             "partition_counts": {"train": len(train), "calibration": len(cal), "test": len(test)},
-            "test_metrics": report, "limitations": ["No deployment approval", "No individual contract prediction",
+            "partition_windows": {"train": window(train), "calibration": window(cal), "test": window(test)},
+            "test_group_counts": groups, "train_prevalence": prevalence,
+            "prevalence_baseline_brier": baseline["brier"], "test_metrics": report,
+            "limitations": ["No deployment approval", "No individual contract prediction",
                 "Audit selection bias, subgroup coverage, and label quality before interpreting results."]}

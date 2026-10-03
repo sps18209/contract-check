@@ -6,7 +6,7 @@ from .dependencies import map_dependencies
 from .facts import fact_summary
 from .provenance import verified_contract_evidence
 from .providers.rules import RulesProvider
-from .schema import SCHEMA, validate_assessment, validate_request
+from .schema import SCHEMA, fingerprint, validate_assessment, validate_request
 
 
 def assess(project: dict, review: dict, request: dict, manifest: dict | None = None, provider=None) -> dict:
@@ -27,11 +27,11 @@ def assess(project: dict, review: dict, request: dict, manifest: dict | None = N
             "missing": missing, "contract_evidence": verified_contract_evidence(project, q["evidence"]),
             "authority_ids": [a["id"] for a in authorities], "authorities": authorities,
             "facts": fact_summary(q), "dependencies": map_dependencies(project, q),
-            "supporting_hypothesis": proposal["supporting"], "opposing_hypothesis": proposal["opposing"],
-            "unresolved_questions": proposal["unknowns"], "provider": getattr(provider, "name", type(provider).__name__),
+            "provider_draft_unreviewed": proposal, "provider": getattr(provider, "name", type(provider).__name__),
             "lawyer_review": "pending", "outcome_probability": None,
         })
     result = {"schema": SCHEMA, "source_sha256": project["source_sha256"],
-              "project_version": project["version"], "assessments": items}
-    validate_assessment(project, review, request, result)
+              "project_version": project["version"], "request_sha256": fingerprint(request),
+              "manifest_sha256": fingerprint(manifest), "assessments": items}
+    validate_assessment(project, review, request, result, manifest)
     return result

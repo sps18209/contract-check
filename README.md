@@ -22,7 +22,7 @@ python -m contract_check report project.json revised.json report.md
 python -m contract_check enforcement-template project.json review.json enforcement-request.json
 python -m contract_check enforcement-validate project.json review.json enforcement-request.json
 python -m contract_check enforcement-assess project.json review.json enforcement-request.json assessment.json --authorities authorities.json
-python -m contract_check enforcement-report assessment.json assessment.md
+python -m contract_check enforcement-report project.json review.json enforcement-request.json assessment.json assessment.md --authorities authorities.json
 python -m unittest discover -s tests -v
 ```
 

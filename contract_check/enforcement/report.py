@@ -12,9 +12,16 @@ def render_assessment(result: dict) -> str:
         rows += [f"## {_safe(item['question_id'])} · {_safe(item['issue_type'])}", "",
                  f"**Status:** {_safe(item['status'])} · Lawyer review: {_safe(item['lawyer_review'])}", "",
                  "**Contract text:** " + "; ".join(_safe(e["block_id"] + ": " + e["quote"]) for e in item["contract_evidence"]), "",
-                 "**Supporting question:** " + _safe(item["supporting_hypothesis"]), "",
-                 "**Opposing question:** " + _safe(item["opposing_hypothesis"]), "",
+                 "**Legal review:** Analyze the asserted obligation, alternative reading, defenses, and remedy against the cited source text.", "",
                  "**Missing inputs:** " + (_safe(", ".join(item["missing"])) or "None recorded"), "",
                  "**Supplied authorities:** " + (_safe(", ".join(item["authority_ids"])) or "None"), "",
-                 "**Unresolved:** " + _safe("; ".join(item["unresolved_questions"])), ""]
+                 "**Provider draft:** Omitted from this report pending lawyer review of its claims.", ""]
+        for authority in item["authorities"]:
+            rows += [f"- {_safe(authority['id'])}: {_safe(authority['title'])} ({_safe(authority['jurisdiction'])}; {_safe(authority['court_or_body'])}; {_safe(authority['decision_date'])}) — {_safe(authority['source_url'])}",
+                     f"  Excerpt in supplied text: {_safe(authority['excerpt'])}. Reviewer attested: {_safe(authority['reviewer_verified'])}."]
+        rows.append("")
+        for state, facts in item["facts"].items():
+            for fact in facts:
+                rows.append(f"- Fact ({_safe(state)}): {_safe(fact['statement'])} [source: {_safe(fact['source'])}]")
+        rows += ["", "**Cross-references:** " + (_safe(", ".join(link["reference"] for link in item["dependencies"]["explicit_references"])) or "None identified"), ""]
     return "\n".join(rows).rstrip() + "\n"

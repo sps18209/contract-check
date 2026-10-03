@@ -4,7 +4,7 @@ import copy
 import unittest
 
 from contract_check.core import ingest
-from contract_check.enforcement import assess, validate_request
+from contract_check.enforcement import assess, validate_request, validate_assessment
 from contract_check.enforcement.authorities import verify_manifest
 from contract_check.enforcement.issues import request_template
 from contract_check.enforcement.providers.local_llm import LocalLLMProvider
@@ -47,7 +47,8 @@ class EnforcementTests(unittest.TestCase):
         manifest = {"schema": 1, "authorities": [{"id": "A-1", "title": "Fictional test authority", "jurisdiction": "Missouri",
                     "court_or_body": "Test fixture", "decision_date": "2020-01-01", "precedential_status": "fictional",
                     "source_url": "https://example.invalid/fixture", "full_text": "For this fixture, delivery is disputed.",
-                    "excerpt": "delivery is disputed", "reviewer_verified": True}]}
+                    "excerpt": "delivery is disputed", "reviewer_verified": True,
+                    "reviewed_by": "Fixture reviewer", "reviewed_at": "2026-01-01", "review_note": "Fictional source checked for this test"}]}
         result = assess(project, review, request, manifest)
         self.assertEqual(result["assessments"][0]["status"], "review_pending")
         self.assertEqual(result["assessments"][0]["lawyer_review"], "pending")
@@ -70,6 +71,39 @@ class EnforcementTests(unittest.TestCase):
             verify_manifest({"schema": 1, "authorities": [{"id": "x", "title": "x", "jurisdiction": "x", "court_or_body": "x", "decision_date": "x", "precedential_status": "x", "source_url": "x", "full_text": "actual", "excerpt": "invented"}]})
         with self.assertRaises(ValueError):
             LocalLLMProvider("https://remote.example/v1/chat/completions", "model")
+
+    def test_untrusted_model_text_not_rendered_and_tampering_rejected(self):
+        project, review = sample("Payment is due on delivery.\n", "on delivery", "Payment timing")
+        request = request_template(project, review)
+        class HostileProvider:
+            name = "hostile-fixture"
+            def propose(self, question, authorities):
+                return {"supporting": "This clause is unquestionably enforceable under invented law.",
+                        "opposing": "None", "unknowns": []}
+        q = request["questions"][0]
+        q.update(enforcing_party="Seller", resisting_party="Buyer", asserted_duty="Payment", requested_remedy="Payment",
+                 forum="Missouri state court", posture="Pre-suit", event_date="2026-01-01",
+                 facts=[{"statement": "Delivery occurred", "state": "disputed", "source": "Buyer statement"}], authority_ids=["A-1"])
+        manifest = {"schema": 1, "authorities": [{"id": "A-1", "title": "Fictional fixture", "jurisdiction": "MO", "court_or_body": "Test",
+                    "decision_date": "2020-01-01", "precedential_status": "fictional", "source_url": "https://example.invalid/fixture",
+                    "full_text": "Fictional fixture passage.", "excerpt": "fixture passage", "reviewer_verified": True,
+                    "reviewed_by": "Fixture reviewer", "reviewed_at": "2026-01-01", "review_note": "Test only"}]}
+        result = assess(project, review, request, manifest, HostileProvider())
+        self.assertIn("unquestionably", result["assessments"][0]["provider_draft_unreviewed"]["supporting"])
+        self.assertNotIn("unquestionably", render_assessment(result))
+        forged = copy.deepcopy(result)
+        forged["assessments"][0]["missing"] = []
+        forged["assessments"][0]["status"] = "insufficient_information"
+        with self.assertRaisesRegex(ValueError, "gates"):
+            validate_assessment(project, review, request, forged, manifest)
+
+    def test_finding_link_requires_related_evidence(self):
+        project, review = sample("Delivery is due Monday.\n\nPayment is due Tuesday.\n", "Delivery is due Monday", "Delivery timing")
+        request = request_template(project, review)
+        unrelated = next(b for b in project["blocks"] if "Payment" in b["text"])
+        request["questions"][0]["evidence"] = [{"block_id": unrelated["id"], "quote": "Payment is due Tuesday"}]
+        with self.assertRaisesRegex(ValueError, "connect"):
+            validate_request(project, review, request)
 
 
 if __name__ == "__main__":
