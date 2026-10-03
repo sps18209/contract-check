@@ -56,6 +56,10 @@ def main(argv=None):
             cmd.add_argument('--model')
         if name == 'enforcement-report':
             cmd.add_argument('--authorities')
+    research = sub.add_parser('prediction-experiment', help='Offline cohort evaluation only; no individual contract prediction')
+    research.add_argument('dataset')
+    research.add_argument('output')
+    research.add_argument('--enable-research-prediction', action='store_true')
     a = p.parse_args(argv)
     try:
         if a.command == 'ingest':
@@ -110,6 +114,9 @@ def main(argv=None):
             validate_assessment(project, review, request, assessment,
                                 load(a.authorities) if a.authorities else None)
             Path(a.output).write_text(render_assessment(assessment), encoding='utf-8')
+        elif a.command == 'prediction-experiment':
+            from .enforcement.prediction.train import run_experiment
+            save(a.output, run_experiment(load(a.dataset), enabled=a.enable_research_prediction))
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
         p.exit(1, f'contract-check: {error}\n')
     return 0

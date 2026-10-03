@@ -15,8 +15,8 @@ ORIGIN = "https://topcontractreview.com"
 
 
 def shell(title, description, body, route):
-    items = [("library", "Skill & downloads"), ("workflow", "Workflow"),
-             ("forms", "Forms"), ("get-started", "Get started")]
+    items = [("workflow", "How it works"), ("forms", "Review forms"),
+             ("library", "The package"), ("get-started", "Get started")]
     links = "".join(f'<a href="/{slug}/" data-n="{i:02}"'
                     + (' aria-current="page"' if route == slug else "")
                     + f'>{label}</a>' for i, (slug, label) in enumerate(items, 1))
@@ -33,7 +33,7 @@ def shell(title, description, body, route):
 <nav class="links" id="navlinks" aria-label="Main navigation">{links}</nav></div></header>
 <main id="main">{body}</main><footer><div class="wrap"><div class="footer-inner"><a class="brand" href="/">TopContractReview</a>
 <nav class="footer-links" aria-label="Footer navigation"><a href="/about/">About</a><a href="/safety/">Using AI carefully</a><a href="/verification/">Method & validation</a><a href="https://github.com/sps18209/contract-check">Source</a></nav></div>
-<p class="footer-note">Contract Check · Development edition {VERSION} · Drafting and issue spotting with human review. No contract-upload form. No attorney-client relationship is created.</p>
+<p class="footer-note">Contract Check · Development edition {VERSION} · Drafting and issue spotting with human review. No contract-upload form. No attorney-client relationship is created. If an attorney has not reviewed the complete agreement, seek attorney review before anyone signs.</p>
 <p class="footer-note">© 2026 TopContractReview. Website design adapted from TopDWI under its <a href="/LICENSE-CODE">MIT code license</a>.</p></div></footer></body></html>'''
 
 
@@ -88,8 +88,8 @@ def build():
     skill = (ROOT / "skill/SKILL.md").read_text()
     home = (ROOT / "website/home.html").read_text()
     (OUT / "index.html").write_text(shell(
-        "Understand the bargain before you sign",
-        "Contract Check helps your AI assistant review deal terms, surface decision points, and prepare controlled revisions. Complete skill downloads and review forms.",
+        "Know where the draft changes the deal",
+        "Compare a contract with the deal you intended. Record passage-linked findings, your choices, and controlled revisions with Contract Check.",
         home, ""))
     for route, page in pages.items():
         directory = OUT / route
