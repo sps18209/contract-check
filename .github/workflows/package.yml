@@ -24,10 +24,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.2.1 \
+          gh release create v0.2.2 \
             "$RUNNER_TEMP/contract-check-release/contract-check-2026-development.zip" \
             "$RUNNER_TEMP/contract-check-release/contract-check-plugin.zip" \
+            "$RUNNER_TEMP/contract-check-release/contract-check-direct-upload.zip" \
             "$RUNNER_TEMP/contract-check-release/SHA256SUMS.txt" \
             --target "$GITHUB_SHA" --prerelease \
-            --title "Contract Check 0.2.1 development" \
+            --title "Contract Check 0.2.2 development" \
             --notes "Complete portable skill and ChatGPT plugin packages with all four review forms, references, and Python runtime. Development edition; host behavior and lawyer review remain separate validation steps."
